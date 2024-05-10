@@ -8,8 +8,8 @@ class CTMapping:
 
     def __init__(self, ct_image: CTImage, segmentation_image: SegmentationImage):
         self.image = None
-        self.segmentation = None
-        self.ct_image =ct_image
+        self.segmentations = []
+        self.ct_image = ct_image
         self.segmentation_image = segmentation_image
         self.mappings = []
 
@@ -27,3 +27,13 @@ class CTMapping:
             ct_image_slices.append(ct_slice.data)
 
         self.image = np.array(ct_image_slices)
+
+        for i in range(SegmentationImage.number_of_segmentations):
+            segmentation_image_slices = []
+            for ct_slice, segment_slice in self.mappings:
+                print(segment_slice.segmentation_slices[i])
+                segmentation_image_slices.append(segment_slice.segmentation_slices[i])
+
+            self.segmentations.append(np.array(segmentation_image_slices))
+
+

@@ -29,7 +29,7 @@ class SegmentationImage:
             image_position_patient = frames[i].PlanePositionSequence[0].ImagePositionPatient
 
             for j in range(self.number_of_segmentations):
-                segments.append(frames[number_of_frames_in_ct_image * j + i])
+                segments.append(segmentation.pixel_array[number_of_frames_in_ct_image * j + i])
 
             self.slices.append(SegmentationSlice(sop_instance_uid, image_position_patient, segments))
 
