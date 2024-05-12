@@ -20,6 +20,7 @@ class CTSlice:
         self.slice_location = image_slice.SliceLocation
         self.number_of_rows = image_slice.Rows
         self.number_of_columns = image_slice.Columns
+        self.pixel_spacing = image_slice.PixelSpacing
 
         self.data = image_slice.pixel_array
 

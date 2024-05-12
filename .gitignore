@@ -1,3 +1,5 @@
 __pycache__*
 *.gif*
 *.png*
+data_1/*
+data_2/*
