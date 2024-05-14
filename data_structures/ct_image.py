@@ -95,7 +95,7 @@ class CTImage:
         plt.tight_layout()
         plt.show()
 
-    def vislualize_slices(self, axial_idx, sagittal_idx, coronal_idx):
+    def visualize_slices(self, axial_idx, sagittal_idx, coronal_idx, aspect=1):
         """
         Plot axial, sagittal, and coronal CT slices.
 
@@ -119,12 +119,12 @@ class CTImage:
         axes[0].axis('off')
 
         # Sagittal slice
-        axes[1].imshow(self.pixel_array[:, sagittal_idx, :], cmap='gray', aspect=2)
+        axes[1].imshow(self.pixel_array[:, sagittal_idx, :], cmap='gray', aspect=aspect)
         axes[1].set_title(f"Sagittal Slice at index {sagittal_idx}")
         axes[1].axis('off')
 
         # Coronal slice
-        axes[2].imshow(self.pixel_array[:, :, coronal_idx], cmap='gray', aspect=2)
+        axes[2].imshow(self.pixel_array[:, :, coronal_idx], cmap='gray', aspect=aspect)
         axes[2].set_title(f"Coronal Slice at index {coronal_idx}")
         axes[2].axis('off')
 
