@@ -33,12 +33,41 @@ class CTMapping:
         for i in range(SegmentationImage.number_of_segmentations):
             segmentation_image_slices = []
             for ct_slice, segment_slice in self.mappings:
-                print(segment_slice.segmentation_slices[i])
                 segmentation_image_slices.append(segment_slice.segmentation_slices[i])
 
             self.segmentations.append(np.array(segmentation_image_slices))
 
         self.combine_segmentations()
+
+    def plot_histogram(self, bins=256):
+        """Plot histogram of the 3D image intensities."""
+        plt.figure(figsize=(10, 6))
+        plt.hist(self.image.flatten(), bins=bins)
+        plt.title('Histogram of Pixel Intensities')
+        plt.xlabel('Pixel Intensity')
+        plt.ylabel('Frequency')
+        plt.grid(True)
+        plt.show()
+
+    import numpy as np
+    import matplotlib.pyplot as plt
+
+    def sigmoid_windowing(self, window_center, window_width):
+        """Apply sigmoid windowing to the 3D image to enhance contrast."""
+        # Sigmoid function parameters
+        L = 255  # Maximum pixel intensity for an 8-bit image
+        a = 10  # Control the steepness of the sigmoid, adjust based on desired contrast
+
+        # Sigmoid transformation formula
+        x = (self.image - window_center) * (a / window_width)  # Scaled distance from window center
+        windowed_img = L / (1 + np.exp(-x))
+
+        self.image = windowed_img.astype(np.uint8)
+
+    def correct_orientation(self):
+
+        self.image = np.flip(self.image, axis=0)
+        self.segmentation_image_combined = np.flip(self.segmentation_image_combined, axis=0)
 
     def plot_image_slice(self, slice_index, axis=0):
         """

@@ -123,13 +123,3 @@ def visualize_slices(image, axial_idx, sagittal_idx, coronal_idx, aspect=1):
     plt.tight_layout()
     plt.show()
 
-
-def pad_image(smaller_image, target_shape):
-    # Calculate the required padding amounts for each dimension
-    padding = [(s - d) // 2 if s > d else 0 for s, d in zip(target_shape, smaller_image.shape)]
-    padding = [(p, s - d - p) if s > d else (0, 0) for p, s, d in zip(padding, target_shape, smaller_image.shape)]
-
-    # Apply symmetric padding to each dimension
-    padded_image = np.pad(smaller_image, padding, mode='constant',
-                          constant_values=0)  # Constant_values depends on image background
-    return padded_image

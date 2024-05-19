@@ -1,11 +1,11 @@
 """
 
 """
-
 import os
 import pydicom
 import matplotlib.pyplot as plt
 import numpy as np
+import scipy
 
 from .ct_slice import CTSlice
 
@@ -66,6 +66,21 @@ class CTImage:
 
         self.pixel_array = np.array(slices_array)
 
+    def is_same_acquisition(self):
+        """
+        Check if image belong to same acquisition
+        """
+        return False if len(list(set([a.acquisition_number for a in self.slices]))) > 1 else True
+
+    def resize_image(self, target_shape):
+        """
+        Resizes a 3D image to a target shape using scipy.ndimage.zoom.
+        """
+        zoom_factors = [n / o for n, o in zip(target_shape, self.pixel_array.shape)]
+
+        resized_image = scipy.ndimage.zoom(self.pixel_array, zoom_factors, order=3)
+        self.pixel_array = resized_image
+
     def visualize_all_projections_mip(self):
         """
 
@@ -78,12 +93,12 @@ class CTImage:
         fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
         # Axial slice
-        axes[0].imshow(coronal_plane, cmap='gray', aspect=2)
+        axes[0].imshow(coronal_plane, cmap='gray')
         axes[0].set_title(f"MIP Coronal")
         axes[0].axis('off')
 
         # Sagittal slice
-        axes[1].imshow(sagittal_plane, cmap='gray', aspect=2)
+        axes[1].imshow(sagittal_plane, cmap='gray')
         axes[1].set_title(f"MIP Sagittal")
         axes[1].axis('off')
 
