@@ -51,7 +51,7 @@ This project is part of a course requirement for Medical Image Processing at UIB
 
 ## Contact
 
-For any queries, contact [Ikram Ul Haq](maitlto:ulhaqi12@gmail.com)
+For any queries, contact [Ikram Ul Haq](https://github.com/ulhaqi12)
 
 ## Acknowledgments
 
