@@ -1,3 +1,8 @@
+"""
+File contains the code of data structure to store on slice of segmentation image.
+
+Authors(s): Ikram Ul Haq(ulhaqi12)
+"""
 
 
 class SegmentationSlice:

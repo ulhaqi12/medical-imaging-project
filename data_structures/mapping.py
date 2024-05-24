@@ -41,7 +41,7 @@ class CTMapping:
 
     def plot_histogram(self, bins=256):
         """Plot histogram of the 3D image intensities."""
-        plt.figure(figsize=(10, 6))
+        plt.figure(figsize=(5, 3))
         plt.hist(self.image.flatten(), bins=bins)
         plt.title('Histogram of Pixel Intensities')
         plt.xlabel('Pixel Intensity')

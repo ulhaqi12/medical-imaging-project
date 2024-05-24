@@ -1,3 +1,9 @@
+"""
+File contains the code to handle segmentation image
+
+Author(s): Ikram Ul Haq (ulhaqi12)
+"""
+
 import pydicom
 
 from .segmentaiton_slice import SegmentationSlice

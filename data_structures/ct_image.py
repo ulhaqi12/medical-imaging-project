@@ -1,6 +1,9 @@
 """
+File hosts the code for data structure that stores one CT Image.
 
+Author(s): Ikram Ul Haq(ulhaqi12)
 """
+
 import os
 import pydicom
 import matplotlib.pyplot as plt
@@ -41,6 +44,7 @@ class CTImage:
         self.number_of_slices = None
         self.slices = []
         self.pixel_array = None
+        self.transformed = None
 
     def load_data(self, data_path: str):
         """
@@ -72,14 +76,34 @@ class CTImage:
         """
         return False if len(list(set([a.acquisition_number for a in self.slices]))) > 1 else True
 
-    def resize_image(self, target_shape):
+    def rescale_image(self, original_spacing, target_spacing=[1.0, 1.0, 1.0]):
         """
-        Resizes a 3D image to a target shape using scipy.ndimage.zoom.
+        rescale all three dimensions based on the pixel spacing
         """
-        zoom_factors = [n / o for n, o in zip(target_shape, self.pixel_array.shape)]
+        scaling_factors = [os / ts for os, ts in zip(original_spacing, target_spacing)]
+        rescaled_image = scipy.ndimage.zoom(self.pixel_array, scaling_factors, order=1)
+        self.pixel_array = rescaled_image
 
-        resized_image = scipy.ndimage.zoom(self.pixel_array, zoom_factors, order=3)
-        self.pixel_array = resized_image
+    def crop_image(self, target_shape):
+        """
+        crop image to the target size
+        """
+        start_indices = [(i - t) // 2 for i, t in zip(self.pixel_array.shape, target_shape)]
+        end_indices = [start + t for start, t in zip(start_indices, target_shape)]
+        cropped_image = self.pixel_array[:, start_indices[1]:end_indices[1],
+                        start_indices[2]:end_indices[2]]
+        self.pixel_array = cropped_image
+
+    def interpolate_slices(self, target_slices):
+        """
+        zoom in for making slices of input similar to the reference.
+        """
+        current_slices = self.pixel_array.shape[0]
+        zoom_factor = target_slices / current_slices
+        zoom_factors = [zoom_factor, 1, 1]  # Only increase the number of slices, keep other dimensions the same
+        interpolated_image = scipy.ndimage.zoom(self.pixel_array, zoom_factors, order=1)  # Linear interpolation
+        self.pixel_array = interpolated_image
+
 
     def visualize_all_projections_mip(self):
         """

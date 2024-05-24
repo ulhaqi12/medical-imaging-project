@@ -1,5 +1,5 @@
 """
-File that contain utility functions for the project
+File that contain utility functions for the project (mostly copied from labs/activities in the course)
 
 Author(s): Ikram Ul Haq (ulhaqi12)
 """
@@ -72,20 +72,39 @@ def apply_cmap(img: np.ndarray, cmap_name: str = 'bone') -> np.ndarray:
     return cmap_function(img)
 
 
-def visualize_alpha_fusion(img: np.ndarray, mask: np.ndarray, alpha: float = 0.25, aspect=1, visualize=False):
-    """ Visualize both image and mask in the same plot. """
-    img_sagittal_cmapped = apply_cmap(img, cmap_name='bone')    # Why 'bone'?
-    mask_bone_cmapped = apply_cmap(mask, cmap_name='prism')     # Why 'prism'?
-    mask_bone_cmapped = mask_bone_cmapped * mask[..., np.newaxis].astype('bool')
+# def visualize_alpha_fusion(img: np.ndarray, mask: np.ndarray, alpha: float = 0.25, aspect=1, visualize=False):
+#     """ Visualize both image and mask in the same plot. """
+#     img_sagittal_cmapped = apply_cmap(img, cmap_name='bone')    # Why 'bone'?
+#     mask_bone_cmapped = apply_cmap(mask, cmap_name='prism')     # Why 'prism'?
+#     mask_bone_cmapped = mask_bone_cmapped * mask[..., np.newaxis].astype('bool')
+#
+#     result = img_sagittal_cmapped * (1-alpha) + mask_bone_cmapped * alpha
+#     if visualize:
+#         plt.imshow(result, aspect=aspect)
+#         plt.title(f'Segmentation with alpha {alpha}')
+#         plt.show()
+#     else:
+#         return result
 
-    result = img_sagittal_cmapped * (1-alpha) + mask_bone_cmapped * alpha
+
+def visualize_alpha_fusion(img: np.ndarray, mask: np.ndarray, alpha: float = 0.25, aspect=1, visualize=False):
+    """Visualize both image and mask in the same plot."""
+    img_sagittal_cmapped = apply_cmap(img, cmap_name='bone')
+    mask_bone_cmapped = apply_cmap(mask, cmap_name='prism')
+
+    # Create a boolean array where mask is present
+    mask_present = mask.astype(bool)
+
+    # Applying (1-alpha) only where mask is present, and alpha blending where mask is present
+    img_sagittal_cmapped[mask_present] *= (1 - alpha)
+    result = img_sagittal_cmapped + mask_bone_cmapped * alpha * mask_present[..., np.newaxis]
+
     if visualize:
         plt.imshow(result, aspect=aspect)
         plt.title(f'Segmentation with alpha {alpha}')
         plt.show()
     else:
         return result
-
 
 def visualize_slices(image, axial_idx, sagittal_idx, coronal_idx, aspect=1):
     """
